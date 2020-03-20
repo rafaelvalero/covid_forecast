@@ -39,8 +39,16 @@ Also serious people and Boris Johnson say you want to kill me. That is not polit
 3. Venna, A. Tavanaei, R. N. Gottumukkala, V. V. Raghavan, A. S. Maida and S. Nichols, "A Novel Data-Driven Model for Real-Time Influenza Forecasting," in IEEE Access, vol. 7, pp. 7691-7701, 2019.
 
 
-# Intersting libraries and repositories  
+# Interesting libraries and repositories  
 
 1. Blog - Python Example
     * https://towardsdatascience.com/using-kalman-filter-to-predict-corona-virus-spread-72d91b74cc8
     * https://github.com/Rank23/COVID19
+    
+# covid_forecast.yml
+covid_forecast.yml is the enviroment with the lybraries install it do:
+
+```python
+conda env create -f covid_forecast.yml
+```
+To use conda enviroment management in general click [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)

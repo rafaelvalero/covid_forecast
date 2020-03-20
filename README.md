@@ -36,8 +36,15 @@ Also serious people and Boris Johnson say you want to kill me. That is not polit
     Integer-valued autoregression of influenza cases provides a strong base forecast model, which is enhanced by the addition of Google Flu Trends confirming the predictive capabilities of search query based syndromic surveillance. This accessible and flexible forecast model can be used by individual medical centers to provide advanced warning of future influenza cases.
 
 2. Escobar, L.E., Qiao, H. & Peterson, A.T. Forecasting Chikungunya spread in the Americas via data-driven empirical approaches. Parasites Vectors 9, 112 (2016). https://doi.org/10.1186/s13071-016-1403-y
+    **Abstract**
+    **Background:** Chikungunya virus (CHIKV) is endemic to Africa and Asia, but the Asian genotype invaded the Americas in 2013. The fast increase of human infections in the American epidemic emphasized the urgency of developing detailed predictions of case numbers and the potential geographic spread of this disease.
+    **Methods:** We developed a simple model incorporating cases generated locally and cases imported from other countries, and forecasted transmission hotspots at the level of countries and at finer scales, in terms of ecological features.
+    **Results:** By late January 2015, >1.2 M CHIKV cases were reported from the Americas, with country-level prevalences between nil and more than 20 %. In the early stages of the epidemic, exponential growth in case numbers was common; later, however, poor and uneven reporting became more common, in a phenomenon we term "surveillance fatigue." Economic activity of countries was not associated with prevalence, but diverse social factors may be linked to surveillance effort and reporting.
+    **Conclusions:** Our model predictions were initially quite inaccurate, but improved markedly as more data accumulated within the Americas. The data-driven methodology explored in this study provides an opportunity to generate descriptive and predictive information on spread of emerging diseases in the short-term under simple models based on open-access tools and data that can inform early-warning systems and public health intelligence.
+Keywords: Epidemic, Transmission, Disease model, Vector-borne, Passenger flow
 3. Venna, A. Tavanaei, R. N. Gottumukkala, V. V. Raghavan, A. S. Maida and S. Nichols, "A Novel Data-Driven Model for Real-Time Influenza Forecasting," in IEEE Access, vol. 7, pp. 7691-7701, 2019.
-
+    
+   We provide data-driven machine learning methods that are capable of making real-time influenza forecasts that integrate the impacts of climatic factors and geographical proximity to achieve better forecasting performance. The key contributions of our approach are both applying deep learning methods and incorporation of environmental and spatio-temporal factors to improve the performance of the influenza forecasting models. We evaluate the method on Influenza Like Illness (ILI) counts and climatic data, both publicly available data sets.
 
 # Interesting libraries and repositories  
 

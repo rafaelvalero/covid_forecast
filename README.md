@@ -1,5 +1,6 @@
 # covid_forecast
-Data sources and forecast techniques applied to COVID / Coronavirus
+Data sources and forecast techniques applied to COVID / Coronavirus. In particular in order tome 
+measure / forecast at a geografical level the impact in terms of peope sick and casualties.
 
 # Special Thanks
 Dear Coronavirus (Covid or any other fancy name), thanks for all the time I am spending at home and not going anywhere, thanks for 

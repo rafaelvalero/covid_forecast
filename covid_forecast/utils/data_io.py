@@ -1,10 +1,6 @@
-import sys, os
-import csv
-import requests
-from urllib.parse import urlparse
-
 import shutil
 import requests
+import pandas as pd
 
 
 
@@ -34,6 +30,10 @@ def download_the_data(url = 'https://www.ecdc.europa.eu/en/publications-data/dow
         shutil.copyfileobj(response.raw, out_file)
     del response
     return None
+
+def get_data(dowload_folder_name = '../data/data.xlsx'):
+    data = pd.read_excel(dowload_folder_name)
+    return data
 
 
 if __name__ == '__main__':

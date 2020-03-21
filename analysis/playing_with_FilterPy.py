@@ -2,9 +2,12 @@
 There are a number of works related to Kalman Filter (hereafter KF)
 Here to explore a bit different python KF implementations, such as FilterPy: https://filterpy.readthedocs.io/en/latest/#
 Interesting paper about KF: https://arxiv.org/pdf/1204.0375.pdf implementation in Python
+
+:TODO
+Continue working on the estimation of the parameters of the KF.
 """
 import sys, os
-from covid_forecast.utils.data_io import get_data
+from covid_forecast.utils.data_io import get_data, download_the_data
 from filterpy.kalman import KalmanFilter
 from filterpy.common import Q_discrete_white_noise
 import matplotlib.pyplot as plt
@@ -19,6 +22,8 @@ sys.path.insert(0,'../../../covid_forcast')
 # where to save things
 OUTPUT = '../outputs/playing_with_FilterPy'
 os.makedirs(OUTPUT,exist_ok=True)
+# In case you need to refresh the data / you need a folder /data
+# download_the_data()
 """To save some time just run the part you want"""
 run_example = False
 run_real_cases = True
@@ -65,6 +70,7 @@ if run_real_cases:
             data_ = data[data['Countries and territories']==country].copy()
             data_ = data_.sort_values(by='DateRep')
             zs = data_[variable]
+            zs = np.trim_zeros(zs)
             dt = 1.
             R = 3.
             kf = KalmanFilter(dim_x=2, dim_z=1, dim_u=1)

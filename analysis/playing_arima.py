@@ -1,5 +1,6 @@
 """
 Let's check this glorious repo from R in Python
+Some explanation here https://youtu.be/10pvXLKw5dQ
 
 Blogs:
 1) Basic explanation ARIMA https://www.analyticsvidhya.com/blog/2018/08/auto-arima-time-series-modeling-python-r/
@@ -90,6 +91,4 @@ if run_real_cases:
 
             except Exception as e: print(e)
 
-country = 'Spain'
-case = 'Cases'
 

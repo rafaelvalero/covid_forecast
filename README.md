@@ -19,12 +19,12 @@ Also serious people and Boris Johnson say you want to kill me. That is not polit
 3. [Literature Review](#Literature Review)
 4. [Python Enviroment](#covid_forecast.yml)
 
-#Content
-##ARIMA Forecast
+# Content
+## ARIMA Forecast
 For many countries using European Centro For Disease Prevention and Control Data.
 There are different output and graphs including for cast for the next 3 days and graphs.
 
-###Materials
+### Materials
 * Notebook [here](notebooks/playing_arima.ipynb)
 * Some explanation on video  [here](https://youtu.be/10pvXLKw5dQ)
 * Outputs in `/outputs/arima`. Including graphs and spreadsheets. For example:
@@ -33,11 +33,11 @@ There are different output and graphs including for cast for the next 3 days and
 * Data source from [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
 * Script with more cases in `/analysis/playing_with_arima.py`.
 
-##Survival Analysis
+## Survival Analysis
 * Notebook [here](notebooks/survival_analysis.ipynb) 
-##Kalman Filter
+## Kalman Filter
 Some initial analysis. Work In progress.
-#Data sources
+# Data sources
 1. Time series by country:
     1.  [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
         * Used by: [Our World in Data](https://ourworldindata.org/coronavirus-source-data)
@@ -46,8 +46,8 @@ Some initial analysis. Work In progress.
 3. For the UK, I am exploring: https://www.gov.uk/government/publications/covid-19-track-coronavirus-cases
   
 
-#Literature Review
-##Epidemics studies Summaries. For Forecast/Prediction
+# Literature Review
+## Epidemics studies Summaries. For Forecast/Prediction
 
 1. Dugas, Andrea Freyer et al. “Influenza forecasting with Google Flu Trends.” PloS one vol. 8,2 (2013): e56176. doi:10.1371/journal.pone.0056176
     **Background**
@@ -76,7 +76,7 @@ Keywords: Epidemic, Transmission, Disease model, Vector-borne, Passenger flow
     
    We provide data-driven machine learning methods that are capable of making real-time influenza forecasts that integrate the impacts of climatic factors and geographical proximity to achieve better forecasting performance. The key contributions of our approach are both applying deep learning methods and incorporation of environmental and spatio-temporal factors to improve the performance of the influenza forecasting models. We evaluate the method on Influenza Like Illness (ILI) counts and climatic data, both publicly available data sets.
 
-###Interesting libraries and repositories  
+### Interesting libraries and repositories  
 
 1. Blog - Python Example
     * https://towardsdatascience.com/using-kalman-filter-to-predict-corona-virus-spread-72d91b74cc8
@@ -84,10 +84,10 @@ Keywords: Epidemic, Transmission, Disease model, Vector-borne, Passenger flow
 2. Notebook from Kaggle
     * https://www.kaggle.com/shubhamai/coronavirus-eda-future-predictions
     
-##For Survival Analysis
+## For Survival Analysis
 
     
-#covid_forecast.yml
+# covid_forecast.yml
 covid_forecast.yml is the enviroment with the lybraries install it do:
 
 ```python

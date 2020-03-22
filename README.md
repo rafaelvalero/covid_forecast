@@ -9,13 +9,15 @@ For many countries using European Centro For Disease Prevention and Control Data
 There are different output and graphs including for cast for the next 3 days and graphs.
 
 **Materials**:
-See notebook in the folder `/notebooks/playing_with_arima.ipynb` and script in `/analysis/playing_with_arima.py`.
-Notebook  [here](https://github.com/rafaelvalero/covid_forecast/blob/get_daily_dataset_ECDPC/notebooks/playing_arima.ipynb)
-Some explanation on video  [here](https://youtu.be/10pvXLKw5dQ)
-Outputs in `/outputs/arima`. Including graphs and spreadsheets.
-For example:
+* See notebook in the folder `/notebooks/playing_with_arima.ipynb` and script in `/analysis/playing_with_arima.py`.
+* Notebook  [here](https://github.com/rafaelvalero/covid_forecast/blob/get_daily_dataset_ECDPC/notebooks/playing_arima.ipynb)
+* Some explanation on video  [here](https://youtu.be/10pvXLKw5dQ)
+* Outputs in `/outputs/arima`. Including graphs and spreadsheets. For example:
 
-![Spain Forecast New Cases]('outputs/arima/forecast_next_3days_Spain_Cases.png')
+![Spain Forecast New Cases](outputs/arima/forecast_next_3days_Spain_Cases.png)
+![United States Forecast New Cases](outputs/arima/forecast_next_3days_United_States_of_America_Cases.png)
+* Data source from [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
+
 
 ## Kalman Filter
 Some initial analysis. Work In progress.

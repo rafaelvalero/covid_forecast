@@ -14,7 +14,7 @@ Some explanation on video  [here](https://youtu.be/10pvXLKw5dQ)
 Outputs in `/outputs/arima`. Including graphs and spreadsheets.
 For example:
 
-![Spain Forecast New Cases]('../outputs/arima/forecast_next_3days_Spain_Cases.png')
+![Spain Forecast New Cases]('/outputs/arima/forecast_next_3days_Spain_Cases.png')
 
 ## Kalman Filter
 Some initial analysis. Work In progress.

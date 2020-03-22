@@ -78,10 +78,9 @@ def plt_arima_forecast_outsample(y, forecasts, conf_int=False,
     return None
 
 def render_pic_in_notebook(location_file = '../outputs/arima/forecast_next_3days_Spain_Deaths.png',
-                           set_size_inches = [19,9]):
+                           set_size_inches=[19,9]):
     """making notebook more visual"""
-    img=mpimg.imread(location_file)
-    # end
+    img = mpimg.imread(location_file)
     # from now on you can use img as an image, but make sure you know what you are doing!
     imgplot=plt.imshow(img)
     plt.gcf().set_size_inches(set_size_inches[0], set_size_inches[1])

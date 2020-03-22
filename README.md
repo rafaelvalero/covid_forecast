@@ -2,6 +2,17 @@
 Data sources and forecast techniques applied to COVID / Coronavirus. In particular in order tome 
 measure / forecast at a geografical level the impact in terms of peope sick and casualties.
 
+# Content
+
+## ARIMA Forecast
+For many countries using European Centro For Disease Prevention and Control Data.
+There are different output and graphs including for cast for the next 3 days and graphs.
+See notebook in the folder /notebooks and script in /analysis.
+
+## Kalman Filter
+Some initial analysis. Work In progress.
+
+
 # Special Thanks
 Dear Coronavirus (Covid or any other fancy name), thanks for all the time I am spending at home and not going anywhere, thanks for 
 my concerns about to get toilet tissue and for be damaging my hands skins with so much soaps, thanks

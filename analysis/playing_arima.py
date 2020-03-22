@@ -6,13 +6,9 @@ Blogs:
 1) Basic explanation ARIMA https://www.analyticsvidhya.com/blog/2018/08/auto-arima-time-series-modeling-python-r/
 3) Comprehensive example is you would like to see what is ARIMA:
  https://datafai.com/auto-arima-using-pyramid-arima-python-package/
-
 Library:
 1) https://pypi.org/project/pmdarima/
 2) http://alkaline-ml.com/pmdarima/0.9.0/setup.html
-
-
-
 """
 import sys
 import os
@@ -90,7 +86,8 @@ if run_real_cases:
                                    save_here=OUTPUT + '/arima_{}_{}.png'.format(country, variable))
             except Exception as e: print(e)
 
-"""Let's predict next 3 days"""
+"""Let's predict next 3 days
+Explanation/visualization some outputs as well in notebook"""
 report_country = pd.DataFrame()
 if run_predict_next_3_days:
     data = get_data()

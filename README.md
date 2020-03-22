@@ -10,7 +10,7 @@ There are different output and graphs including for cast for the next 3 days and
 
 ### Some materials:
 
-* Notebook  [here](notebooks/playing_arima.ipynb)
+* Notebook [here](notebooks/playing_arima.ipynb)
 * Some explanation on video  [here](https://youtu.be/10pvXLKw5dQ)
 * Outputs in `/outputs/arima`. Including graphs and spreadsheets. For example:
 

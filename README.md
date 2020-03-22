@@ -3,12 +3,11 @@ Data sources and forecast techniques applied to COVID / Coronavirus. In particul
 measure / forecast at a geografical level the impact in terms of peope sick and casualties.
 
 #Special Thanks
-Dear Coronavirus (Covid or any other fancy name), thanks for all the time I am spending at home and not going anywhere, thanks for 
+Dear Coronavirus (Covid19, SARS-CoV-2,  2019-nCoV or any other fancy name), thanks for all the time I am spending at home and not going anywhere, thanks for 
 my concerns about to get toilet tissue and for be damaging my hands skins with so much soaps, thanks
 for the continues paranoia to give virus to the lovely elders. I thought for me to give you something back
 some of this time in my house I could use it for this repo.
 Also serious people and Boris Johnson say you want to kill me. That is not polite.
-
 
 # Table of Contents
 1. [Content](#Content)
@@ -35,15 +34,13 @@ There are different output and graphs including for cast for the next 3 days and
 * Script with more cases in `/analysis/playing_with_arima.py`.
 
 ##Survival Analysis
+* Notebook [here](notebooks/survival_analysis.ipynb) 
 ##Kalman Filter
 Some initial analysis. Work In progress.
 #Data sources
-
 1. Time series by country:
     1.  [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
-
         * Used by: [Our World in Data](https://ourworldindata.org/coronavirus-source-data)
-
 2. [John Hopkins Univeristy data and git](https://github.com/CSSEGISandData/COVID-19)
 
 3. For the UK, I am exploring: https://www.gov.uk/government/publications/covid-19-track-coronavirus-cases
@@ -88,6 +85,7 @@ Keywords: Epidemic, Transmission, Disease model, Vector-borne, Passenger flow
     * https://www.kaggle.com/shubhamai/coronavirus-eda-future-predictions
     
 ##For Survival Analysis
+
     
 #covid_forecast.yml
 covid_forecast.yml is the enviroment with the lybraries install it do:

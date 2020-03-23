@@ -2,7 +2,7 @@
 Data sources and forecast techniques applied to COVID / Coronavirus. In particular in order tome 
 measure / forecast at a geografical level the impact in terms of peope sick and casualties.
 
-#Special Thanks
+# Special Thanks
 Dear Coronavirus (Covid19, SARS-CoV-2,  2019-nCoV or any other fancy name), thanks for all the time I am spending at home and not going anywhere, thanks for 
 my concerns about to get toilet tissue and for be damaging my hands skins with so much soaps, thanks
 for the continues paranoia to give virus to the lovely elders. I thought for me to give you something back

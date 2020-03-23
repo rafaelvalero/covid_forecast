@@ -85,7 +85,6 @@ Keywords: Epidemic, Transmission, Disease model, Vector-borne, Passenger flow
 # covid_forecast.yml
 covid_forecast.yml is the enviroment with the lybraries install it do:
 
-```python
-conda env create -f covid_forecast.yml
-```
+`conda env create -f covid_forecast.yml`
+
 To use conda enviroment management in general click [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)

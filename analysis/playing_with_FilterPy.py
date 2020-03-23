@@ -7,7 +7,7 @@ Interesting paper about KF: https://arxiv.org/pdf/1204.0375.pdf implementation i
 Continue working on the estimation of the parameters of the KF.
 """
 import sys, os
-from covid_forecast.utils.data_io import get_data, download_the_data
+from covid_forecast.utils.data_io import get_data
 from filterpy.kalman import KalmanFilter
 from filterpy.common import Q_discrete_white_noise
 import matplotlib.pyplot as plt
@@ -18,10 +18,10 @@ from numpy.random import randn
 from tqdm import tqdm
 
 
-sys.path.insert(0,'../../../covid_forcast')
+sys.path.insert(0, '../../../covid_forcast')
 # where to save things
 OUTPUT = '../outputs/playing_with_FilterPy'
-os.makedirs(OUTPUT,exist_ok=True)
+os.makedirs(OUTPUT, exist_ok=True)
 # In case you need to refresh the data / you need a folder /data
 # download_the_data()
 """To save some time just run the part you want"""
@@ -54,7 +54,7 @@ if run_example:
     plot_measurements(zs)
     plt.xlabel('time')
     plt.legend(loc=4)
-    plt.ylabel('distance');
+    plt.ylabel('distance')
     plt.savefig(OUTPUT+'/example_filterpy.png')
     plt.clf()
 """Real case"""

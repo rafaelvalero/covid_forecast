@@ -94,3 +94,34 @@ covid_forecast.yml is the enviroment with the lybraries install it do:
 conda env create -f covid_forecast.yml
 ```
 To use conda enviroment management in general click [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+## Your first time
+I recommend to use anaconda here how to set up the thing:
+[Set up anaconda and jupyter Windows](https://www.youtube.com/watch?v=LrMOrMb8-3s)
+[Set up anaconda an jupyter Mac - Linux](https://www.youtube.com/watch?v=E4k38RIUKvo)
+
+## Using Jupyter notebooks
+
+```python
+conda env create -f covid_forecast.yml
+```
+
+Make the kernel available for jupyter notebooks.
+
+
+```bash
+conda install -c anaconda ipykernel
+```
+
+```python
+python -m ipykernel install --user --name covid_forecast --display-name "Python (covid_forecast)"
+```
+
+Now run the notebook server:
+```python
+jupyter notebook
+```
+Now you should be able to see Jupyter.
+
+## Using Pycharm
+
+[Brief Video](https://www.youtube.com/watch?v=KKE0CTPNodA)

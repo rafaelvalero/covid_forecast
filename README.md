@@ -1,6 +1,10 @@
 # covid_forecast
 Data sources and forecast techniques applied to COVID / Coronavirus. In particular in order tome 
-measure / forecast at a geografical level the impact in terms of peope sick and casualties.
+measure / forecast at a geografical level the impact in terms of people sick and casualties.
+
+# we have a number of task / ideas to develop
+See them [here](https://docs.google.com/spreadsheets/d/1ig0U385qGiE19JQQQrvXx4UZQdiT8dWkmxXHSlOPVTQ/edit?usp=sharing)
+Get ready data, different time series approach, evaluations of scenarios and more.
 
 # Special Thanks
 Dear Coronavirus (Covid19, SARS-CoV-2,  2019-nCoV or any other fancy name), thanks for all the time I am spending at home and not going anywhere, thanks for 

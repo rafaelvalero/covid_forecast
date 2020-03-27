@@ -1,6 +1,9 @@
 # covid_forecast
 Data sources and forecast techniques applied to COVID / Coronavirus. In particular in order tome 
-measure / forecast at a geografical level the impact in terms of peope sick and casualties.
+measure / forecast at a geografical level the impact in terms of people sick and casualties.
+Using time series model such as ARIMA, LSTM or Dynamic Factors models. When the peak of SIR model will be reach.By country. Survival Analysis for South Korea.
+
+# Tastk 
 
 # Content
 
@@ -12,19 +15,15 @@ There are different output and graphs including for cast for the next 3 days and
 
 * Notebook [here](notebooks/playing_arima.ipynb)
 * Some explanation on video  [here](https://youtu.be/10pvXLKw5dQ)
-* Outputs in `/outputs/arima`. Including graphs and spreadsheets. For example:
-
-![Spain Forecast New Cases](outputs/arima/forecast_next_3days_Spain_Cases.png)
-![United States Forecast New Cases](outputs/arima/forecast_next_3days_United_States_of_America_Cases.png)
-* Data source from [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
+* Outputs in `/outputs/arima`. Including graphs and spreadsheets. * Data source from [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
 * Script with more cases in `/analysis/playing_with_arima.py`.
 
 
 ## Kalman Filter
 Some initial analysis. Work In progress.
 
-## Survival Analysi
-
+## Survival Analysisi
+* Notebook [here](notebooks/survival_analysis.ipynb)
 
 # Special Thanks
 Dear Coronavirus (Covid or any other fancy name), thanks for all the time I am spending at home and not going anywhere, thanks for 

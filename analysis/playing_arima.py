@@ -12,7 +12,7 @@ Library:
 """
 import sys
 import os
-from covid_forecast.utils.data_io import get_data, download_the_data
+from covid_forecast.utils.data_io import get_data
 from covid_forecast.utils.visualizations import plt_arima_forecast,plt_arima_forecast_outsample
 from tqdm import tqdm
 import pmdarima as pm
@@ -32,6 +32,23 @@ os.makedirs(OUTPUT,exist_ok=True)
 run_example = False
 run_real_cases = False
 run_predict_next_3_days = True
+
+
+def filter_by_country(self, country_vname='Countries and territories', date_vname='DateRep'):
+    """
+    Filters given dataframe by country and sorts by date
+
+    Args:
+        self (pd.DataFrame): input df
+        country_vname (str): obvious
+        date_vname (str): obvious
+
+    Returns:
+        pd.DataFrame: filtered
+    """
+    data_out_df = self[self[country_vname] == country].sort_values(by=date_vname).copy()
+    return data_out_df
+
 
 if run_example:
     """Example"""
@@ -60,26 +77,25 @@ if run_real_cases:
         print('Working on: {}'.format(country))
         for variable in ['Cases', 'Deaths']:
             try:
-                data_ = data[data['Countries and territories']==country].copy()
-                data_ = data_.sort_values(by='DateRep')
+                data_ = data.pipe(filter_by_country)
                 # Triming initial zeros
                 remove_initia_zeros = np.trim_zeros(data_[variable]).__len__()
                 #y = data_[variable][0:remove_initia_zeros]
                 y = data_[variable][-remove_initia_zeros:]
                 data_labels = data_['DateRep'][-remove_initia_zeros:]
                 # taking 90% of the data
-                lenght_for_training = round(y.__len__()*0.9)
+                length_for_training = round(y.__len__()*0.9)
                 # taking the last 3
-                #lenght_for_training = 4
-                train, test = train_test_split(y, train_size=lenght_for_training)
+                #length_for_training = 4
+                train, test = train_test_split(y, train_size=length_for_training)
                 # Fit your model
                 model = pm.auto_arima(train, seasonal=False, suppress_warnings=True)
                 # make your forecasts
                 #forecasts = model.predict(test.shape[0])  # predict N steps into the future
-                forecasts, conf_int =model.predict(test.shape[0], return_conf_int=True)
+                forecasts, conf_int = model.predict(test.shape[0], return_conf_int=True)
                 # Visualize the forecasts (blue=train, green=forecasts)
-                plt_arima_forecast(y, forecasts,conf_int=conf_int,
-                                   lenght_for_training=lenght_for_training,
+                plt_arima_forecast(y, forecasts, conf_int=conf_int,
+                                   length_for_training=length_for_training,
                                    title=country,
                                    y_label=variable,
                                    x=data_labels,
@@ -98,8 +114,7 @@ if run_predict_next_3_days:
         first_variable = pd.DataFrame()
         for variable in ['Cases', 'Deaths']:
             try:
-                data_ = data[data['Countries and territories'] == country].copy()
-                data_ = data_.sort_values(by='DateRep')
+                data_ = data.pipe(filter_by_country)
                 # Triming initial zeros
                 remove_initia_zeros = np.trim_zeros(data_[variable]).__len__()
                 # y = data_[variable][0:remove_initia_zeros]
@@ -124,9 +139,7 @@ if run_predict_next_3_days:
                            x=data_labels,
                            save_here=OUTPUT + '/forecast_next_3days_{}_{}.png'.format(country, variable))
                 # To save the data
-                df_for_data = pd.DataFrame()
-                df_for_data = pd.DataFrame(y.to_list()+forecasts.tolist(),
-                    columns=[variable])
+                df_for_data = pd.DataFrame(y.to_list()+forecasts.tolist(), columns=[variable])
                 df_for_data['Countries and territories'] = country
                 df_for_data['DateRep'] = data_labels
                 if first_variable.empty:

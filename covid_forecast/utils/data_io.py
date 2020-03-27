@@ -3,8 +3,7 @@ import requests
 import pandas as pd
 
 
-
-def search_for_xlsx(url = 'https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide'):
+def search_for_xlsx(url='https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide'):
     """
     This search for the xlsx file to download
     :param url: where is the file to dowload
@@ -13,14 +12,16 @@ def search_for_xlsx(url = 'https://www.ecdc.europa.eu/en/publications-data/downl
     """
     response = requests.get(url)
     for i in response.text.split(' '):
-        if (i not in ['', ' ']) and (i.__contains__('.xlsx')) and ((i.__contains__('https://www.ecdc.europa.eu/sites'))):
+        if (i not in ['', ' ']) and (i.__contains__('.xlsx')) and (i.__contains__('https://www.ecdc.europa.eu/sites')):
             x = i
             print(i)
+    # TODO: x could generate exception of no assignment
     url_xlsx = x.split('"')[1]
     return url_xlsx
 
-def download_the_data(url = 'https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide',
-    dowload_folder_name = '../data/data.xlsx'):
+
+def download_the_data(url='https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide',
+    dowload_folder_name='../data/data.xlsx'):
     """
     Download the data from url and place it in file and folder
     """

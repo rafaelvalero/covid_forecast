@@ -3,7 +3,9 @@ Data sources and forecast techniques applied to COVID / Coronavirus. In particul
 measure / forecast at a geografical level the impact in terms of people sick and casualties.
 Using time series model such as ARIMA, LSTM or Dynamic Factors models. When the peak of SIR model will be reach.By country. Survival Analysis for South Korea.
 
-# Tastk 
+# Tasks :Todo
+
+See them [here](https://docs.google.com/spreadsheets/d/1ig0U385qGiE19JQQQrvXx4UZQdiT8dWkmxXHSlOPVTQ/edit?usp=sharing)
 
 # Content
 

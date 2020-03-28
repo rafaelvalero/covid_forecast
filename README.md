@@ -172,3 +172,4 @@ Now you should be able to see Jupyter.
 ## Using Pycharm
 
 [Brief Video](https://www.youtube.com/watch?v=KKE0CTPNodA)
+

@@ -1,11 +1,13 @@
-import sys
 import os
+import sys
+
 main_dir = os.path.abspath(os.pardir)
 sys.path.insert(0, main_dir)
 from covid_forecast.utils.data_io import download_csv_from_link
 
+# folder path and download url path
 download_foldname = os.path.join(main_dir, "data", "raw")
-jh_git_url = 'https://github.com/CSSEGISandData/COVID-19/tree/master/csse_covid_19_data/csse_covid_19_time_series/'
+jh_git_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'
 
 # Filenames
 global_confirmed_cases = "time_series_covid19_confirmed_global.csv"

@@ -46,6 +46,7 @@ def download_csv_from_link(url='https://opendata.ecdc.europa.eu/covid19/casedist
     Download the data from url and place it in file and folder
     """
     response = requests.get(url, stream=True)
+    # TODO: downloading straight from github raw messes up csv encoding probably due to binary format
     with open(dowload_folder_name, 'wb') as out_file:
         shutil.copyfileobj(response.raw, out_file)
     del response

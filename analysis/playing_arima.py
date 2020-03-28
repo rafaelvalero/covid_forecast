@@ -12,7 +12,7 @@ Library:
 """
 import sys
 import os
-from covid_forecast.utils.data_io import get_data
+from covid_forecast.utils.data_io import get_data, download_csv_from_link
 from covid_forecast.utils.visualizations import plt_arima_forecast,plt_arima_forecast_outsample
 from tqdm import tqdm
 import pmdarima as pm
@@ -27,12 +27,15 @@ sys.path.insert(0,'../../../covid_forcast')
 OUTPUT = '../outputs/arima'
 os.makedirs(OUTPUT,exist_ok=True)
 # In case you need to refresh the data, you need a folder /data
-# download_the_data()
+download_csv_from_link()
 """To save some time just run the part you want"""
 run_example = False
 run_real_cases = False
 run_predict_next_3_days = True
 
+"""List of countries to explore"""
+country_list = ['China', 'Italy', 'Germany', 'India', 'Spain', 'United_Kingdom', 'United_States_of_America',
+                     'Lithuania', 'Cyprus']
 
 def filter_by_country(self, country_vname='Countries and territories', date_vname='DateRep'):
     """
@@ -72,17 +75,19 @@ if run_example:
 if run_real_cases:
     """Real data ARIMA"""
     data = get_data()
+    data['dateRep'] = pd.to_datetime(data['dateRep'],infer_datetime_format=True)
     for country in tqdm(['China','Italy', 'Germany','India', 'Spain', 'United_Kingdom', 'United_States',
             'Lithuania', 'Cyprus']):
         print('Working on: {}'.format(country))
-        for variable in ['Cases', 'Deaths']:
+        for variable in ['cases', 'deaths']:
             try:
-                data_ = data.pipe(filter_by_country)
+                data_ = data[data['countriesAndTerritories'] == country].copy()
+                data_ = data_.sort_values(by='dateRep')
                 # Triming initial zeros
                 remove_initia_zeros = np.trim_zeros(data_[variable]).__len__()
                 #y = data_[variable][0:remove_initia_zeros]
                 y = data_[variable][-remove_initia_zeros:]
-                data_labels = data_['DateRep'][-remove_initia_zeros:]
+                data_labels = data_['dateRep'][-remove_initia_zeros:]
                 # taking 90% of the data
                 length_for_training = round(y.__len__()*0.9)
                 # taking the last 3
@@ -107,20 +112,22 @@ Explanation/visualization some outputs as well in notebook"""
 report_country = pd.DataFrame()
 if run_predict_next_3_days:
     data = get_data()
+    data['dateRep'] = pd.to_datetime(data['dateRep'],infer_datetime_format=True)
+    report_country = pd.DataFrame()
     report = pd.DataFrame()
-    for country in tqdm(['China', 'Italy', 'Germany', 'India', 'Spain', 'United_Kingdom', 'United_States',
-                         'Lithuania', 'Cyprus']):
+    for country in tqdm(country_list):
         print('Working on: {}'.format(country))
         first_variable = pd.DataFrame()
-        for variable in ['Cases', 'Deaths']:
+        for variable in ['cases', 'deaths']:
             try:
-                data_ = data.pipe(filter_by_country)
+                data_ = data[data['countriesAndTerritories'] == country].copy()
+                data_ = data_.sort_values(by='dateRep')
                 # Triming initial zeros
                 remove_initia_zeros = np.trim_zeros(data_[variable]).__len__()
                 # y = data_[variable][0:remove_initia_zeros]
                 y = data_[variable][-remove_initia_zeros:]
-                data_labels = data_['DateRep'][-remove_initia_zeros:]
-                # taking the last 3
+                data_labels = data_['dateRep'][-remove_initia_zeros:]
+                # taking the last 3. # Change it to any other amount
                 lenght_for_forecast = 3
                 # Fit your model
                 model = pm.auto_arima(y, seasonal=False, suppress_warnings=True)
@@ -139,13 +146,15 @@ if run_predict_next_3_days:
                            x=data_labels,
                            save_here=OUTPUT + '/forecast_next_3days_{}_{}.png'.format(country, variable))
                 # To save the data
-                df_for_data = pd.DataFrame(y.to_list()+forecasts.tolist(), columns=[variable])
-                df_for_data['Countries and territories'] = country
-                df_for_data['DateRep'] = data_labels
+                df_for_data = pd.DataFrame()
+                df_for_data = pd.DataFrame(y.to_list()+forecasts.tolist(),
+                    columns=[variable])
+                df_for_data['countriesAndTerritories'] = country
+                df_for_data['dateRep'] = data_labels
                 if first_variable.empty:
                     first_variable = df_for_data
                 else:
-                    first_variable = first_variable.merge(df_for_data, on=('DateRep', 'Countries and territories'))
+                    first_variable = first_variable.merge(df_for_data, on=('dateRep', 'countriesAndTerritories'))
             except Exception as e: print(e)
         if report.empty:
             report = first_variable
@@ -155,6 +164,7 @@ if run_predict_next_3_days:
         report_country = report
     else:
         report_country = pd.concat([report_country, report])
-report_country.to_csv(OUTPUT+"/forecast_next_free_days.csv")
+    # Creation of report
+    report_country.to_csv(OUTPUT+"/forecast_next_free_days.csv")
 
 

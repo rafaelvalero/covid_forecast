@@ -2,6 +2,7 @@
 Data sources and forecast techniques applied to COVID / Coronavirus. In particular in order tome 
 measure / forecast at a geografical level the impact in terms of people sick and casualties.
 
+
 # we have a number of task / ideas to develop
 See them [here](https://docs.google.com/spreadsheets/d/1ig0U385qGiE19JQQQrvXx4UZQdiT8dWkmxXHSlOPVTQ/edit?usp=sharing)
 Get ready data, different time series approach, evaluations of scenarios and more.
@@ -28,19 +29,27 @@ Also serious people and Boris Johnson say you want to kill me. That is not polit
 For many countries using European Centro For Disease Prevention and Control Data.
 There are different output and graphs including for cast for the next 3 days and graphs.
 
-### Materials
 * Notebook [here](notebooks/playing_arima.ipynb)
 * Some explanation on video  [here](https://youtu.be/10pvXLKw5dQ)
-* Outputs in `/outputs/arima`. Including graphs and spreadsheets. For example:
-![Spain Forecast New Cases](outputs/arima/forecast_next_3days_Spain_Cases.png)
-![United States Forecast New Cases](outputs/arima/forecast_next_3days_United_States_of_America_Cases.png)
-* Data source from [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
+* Outputs in `/outputs/arima`. Including graphs and spreadsheets. * Data source from [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
 * Script with more cases in `/analysis/playing_with_arima.py`.
+## SIR model bokey app
+See /apps/sir_app.
+Demostration [here](https://drive.google.com/open?id=1eofU84E_d7XuEzrWiotm0ux-PNAnx07N) 
 
 ## Survival Analysis
 * Notebook [here](notebooks/survival_analysis.ipynb) 
 ## Kalman Filter
 Some initial analysis. Work In progress.
+
+
+# Special Thanks
+Dear Coronavirus (Covid or any other fancy name), thanks for all the time I am spending at home and not going anywhere, thanks for 
+my concerns about to get toilet tissue and for be damaging my hands skins with so much soaps, thanks
+for the continues paranoia to give virus to the lovely elders. I thought for me to give you something back
+some of this time in my house I could use it for this repo.
+Also serious people and Boris Johnson say you want to kill me. That is not polite.
+
 # Data sources
 1. Time series by country:
     1.  [European Centre for Disease Prevention and Control](https://www.ecdc.europa.eu/en/publications-data/download-todays-data-geographic-distribution-covid-19-cases-worldwide)
@@ -137,7 +146,7 @@ Keywords: Epidemic, Transmission, Disease model, Vector-borne, Passenger flow
 # covid_forecast.yml
 covid_forecast.yml is the enviroment with the lybraries install it do:
 
-```python
+```console
 conda env create -f covid_forecast.yml
 ```
 To use conda enviroment management in general click [here](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
@@ -148,23 +157,23 @@ I recommend to use anaconda here how to set up the thing:
 
 ## Using Jupyter notebooks
 
-```python
+```console
 conda env create -f covid_forecast.yml
 ```
 
 Make the kernel available for jupyter notebooks.
 
 
-```bash
+```console
 conda install -c anaconda ipykernel
 ```
 
-```python
+```console
 python -m ipykernel install --user --name covid_forecast --display-name "Python (covid_forecast)"
 ```
 
 Now run the notebook server:
-```python
+```console
 jupyter notebook
 ```
 Now you should be able to see Jupyter.

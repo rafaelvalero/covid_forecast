@@ -34,6 +34,7 @@ def download_the_data(url='https://www.ecdc.europa.eu/en/publications-data/downl
     del response
     return None
 
+
 def get_data(dowload_folder_name = '../data/data.csv'):
     data = pd.read_csv(dowload_folder_name, encoding="ISO-8859-1")
     return data

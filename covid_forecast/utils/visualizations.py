@@ -44,7 +44,7 @@ def plt_arima_forecast(y, forecasts, length_for_training=None,
         plt.show()
     else:
         plt.clf()
-    return None
+    return plt
 
 
 def plt_arima_forecast_outsample(y, forecasts, lenght_for_forecast=None, conf_int=False,

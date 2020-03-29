@@ -30,6 +30,10 @@ import scipy.integrate
 homepage = Div(text=open(os.path.join(os.getcwd(), 'homepage.html')).read(), width=800)
 explanation_sir_model = Div(text=open(os.path.join(os.getcwd(), 'explanation_sir_model.html')).read(), width=800)
 
+tooltips = [('Recovered-Dearth','@R'),
+            ('Infected','@I'),
+            ('Susceptible','@S')]
+
 def SIR_model(y, t, betta, gamma):
     """
     Tradiional SIR model.
@@ -65,14 +69,16 @@ def make_dataset(S0=0.9, I0=0.1, R0 = 0, betta=0.35, gamma=0.1):
     return ColumnDataSource(data=dict(t=t, S=solution[:,0], I=solution[:,1], R=solution[:,2]))
 
 
+
 def make_plot(source):
     """Creation of simple graphs in bokeh"""
     # Set up plot
-    p = figure(plot_width=400, plot_height=400)
+    p = figure(plot_width=400, plot_height=400, tooltips=tooltips)
     #p.vline_stack(['S', 'R', 'I'], x='t', source=source)
-    p.vline_stack(['S'], x='t', source=source, color='blue',  width=4)
-    p.vline_stack(['I'], x='t', source=source, color='red', width=4)
-    p.vline_stack(['R'], x='t', source=source, color='green', width=4)
+    p.vline_stack(['S'], x='t', source=source, color='blue',  width=4, legend_label="Susceptible")
+    p.vline_stack(['I'], x='t', source=source, color='red', width=4, legend_label="Infected")
+    p.vline_stack(['R'], x='t', source=source, color='green', width=4,legend_label="Recovered or Death")
+    p.legend.location = 'center_right'
     return p
 # Create first grapsh
 source = make_dataset()
@@ -117,5 +123,5 @@ inputs = column(text, gamma_, betta_)
 layout = ([[homepage], [inputs, p], [explanation_sir_model]])
 
 # To run in the server
-curdoc().add_root(column(homepage, inputs, p , explanation_sir_model, width=800))
+curdoc().add_root(column(homepage, inputs, p, explanation_sir_model, width=800))
 curdoc().title = "SIR models"

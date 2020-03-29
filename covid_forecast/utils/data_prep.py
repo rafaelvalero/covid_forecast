@@ -61,7 +61,7 @@ def find_admin_loc(target_loc, admin_txt_1='administrative_area_level_1',
     target_loc = gmaps.reverse_geocode((lat, lng))[0]['address_components']
 
     Args:
-        target_loc(json): response from gmaps.reverse_geocode
+        target_loc(list): response from gmaps.reverse_geocode
         admin_txt_1 (str): 'administrative_area_level_1'
         admin_txt_2 (str): 'administrative_area_level_2'
 
@@ -77,3 +77,27 @@ def find_admin_loc(target_loc, admin_txt_1='administrative_area_level_1',
         elif admin_txt_2 in target_loc[i][loc_type_vname]:
             admin_lvl_2 = i
             return admin_lvl_2
+    return admin_lvl_1
+
+
+# The SIR model differential equations.
+def deriv(y, t, N, beta, gamma):
+    """
+    Differential equations for the SIR model
+
+    Args:
+        y (tuple): initial conditions vector (y0 = S0, I0, R0)
+        t (np.ndarray): grid of time points
+        N (int): total population
+        beta (float): contract rate (1/days)
+        gamma (float): mean recovery rate (1/days)
+
+    Returns:
+        tuple: ordinary differential equation results for S, I, R
+    """
+    S, I, R = y
+    dSdt = -beta * S * I / N
+    dIdt = beta * S * I / N - gamma * I
+    dRdt = gamma * I
+
+    return dSdt, dIdt, dRdt

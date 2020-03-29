@@ -10,11 +10,11 @@ download_foldname = os.path.join(main_dir, "data", "raw", "time_series")
 jh_git_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'
 
 # Filenames
-global_confirmed_cases = "time_series_covid19_confirmed_global.csv"
-global_deaths_cases = "time_series_covid19_deaths_global.csv"
-global_recovered_cases = "time_series_covid19_recovered_global.csv"
+global_confirmed_cases_fname = "time_series_covid19_confirmed_global.csv"
+global_deaths_cases_fname = "time_series_covid19_deaths_global.csv"
+global_recovered_cases_fname = "time_series_covid19_recovered_global.csv"
 
-all_files = [global_confirmed_cases, global_deaths_cases, global_recovered_cases]
+all_files = [global_confirmed_cases_fname, global_deaths_cases_fname, global_recovered_cases_fname]
 
 # Make directory if not already there
 if not os.path.isdir(download_foldname):

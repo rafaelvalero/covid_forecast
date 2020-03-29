@@ -114,6 +114,8 @@ venv.bak/
 .idea/
 data/
 papers/
+reports/
+outputs/
 
 # Spyder project settings
 .spyderproject

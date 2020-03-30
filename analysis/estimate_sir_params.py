@@ -1,6 +1,6 @@
 """Credit to: Lewuathe (Github). Source code: https://github.com/Lewuathe/COVID19-SIR"""
-#!/usr/bin/python
 import os
+import re
 import sys
 from datetime import timedelta, datetime
 
@@ -14,7 +14,10 @@ main_dir = os.path.abspath(os.pardir)
 sys.path.insert(0, main_dir)
 from analysis import download_data as dd
 
-fig_export_path = os.path.join(main_dir, "reports", "estimate_sir_params"+os.sep)
+fig_export_path = os.path.join(main_dir, "reports", "estimate_sir_params")
+if not os.path.isdir(fig_export_path):
+    os.mkdir(fig_export_path)
+fig_export_path += os.sep
 
 
 class Learner(object):
@@ -59,7 +62,8 @@ class Learner(object):
         ax.set_title(self.country)
         df.plot(ax=ax)
         print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0:{(beta / gamma):.8f}")
-        fig.savefig(fig_export_path+f"{self.country}.png")
+        export_str = re.sub(r'[^A-Za-z0-9 ]+', '', self.country)
+        fig.savefig(fig_export_path+f"{export_str}.png")
         plt.close(fig)
 
     def predict(self, beta, gamma, confirmed, recovered, death, country, s_0, i_0, r_0):

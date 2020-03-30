@@ -8,6 +8,7 @@ from covid_forecast.utils.data_io import download_csv_from_link
 # folder path and download url path
 download_foldname = os.path.join(main_dir, "data", "raw", "time_series")
 jh_git_url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/'
+population_data_url = "https://www.ecdc.europa.eu/sites/default/files/documents/COVID-19-geographic-disbtribution-worldwide.xlsx"
 
 # Filenames
 global_confirmed_cases_fname = "time_series_covid19_confirmed_global.csv"

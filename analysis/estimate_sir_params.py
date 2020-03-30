@@ -1,10 +1,10 @@
 """Credit to: Lewuathe (Github). Source code: https://github.com/Lewuathe/COVID19-SIR"""
 import os
-import re
+# import re
 import sys
 from datetime import timedelta, datetime
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from scipy.integrate import solve_ivp
@@ -12,28 +12,44 @@ from scipy.optimize import minimize
 
 main_dir = os.path.abspath(os.pardir)
 sys.path.insert(0, main_dir)
-from analysis import download_data as dd
 
 fig_export_path = os.path.join(main_dir, "reports", "estimate_sir_params")
 if not os.path.isdir(fig_export_path):
     os.mkdir(fig_export_path)
 fig_export_path += os.sep
 
+result_df_vnames = ["country", "beta", "gamma", "r_0"]
+country_region_vname = 'Country/Region'
+s_0_vname = "s_0"
+population_df_vnames = [country_region_vname, s_0_vname]
+
 
 class Learner(object):
-    def __init__(self, country, loss_funct, start_date, predict_range, s_0, i_0, r_0):
+    def __init__(self, country, loss_funct, df_dct, s_0_src, predict_range, r_0):
         self.country = country
         self.loss = loss_funct
-        self.start_date = start_date
+        self.df_dct = df_dct
         self.predict_range = predict_range
-        self.s_0 = s_0
-        self.i_0 = i_0
+        self.s_0_src = s_0_src
         self.r_0 = r_0
 
-    def load_df(self, filename, country):
-        df = pd.read_csv(dd.jh_git_url+filename)
-        country_df = df[df['Country/Region'] == country].drop(columns=["Province/State"], errors="ignore")
-        return country_df.iloc[0].loc[self.start_date:]
+    def load_df(self, country):
+        confirmed_df_name = "confirmed_global"
+        df_dct_tmp = self.df_dct.copy()
+        vars_to_use = df_dct_tmp[list(df_dct_tmp.keys())[0]].drop(columns=country_region_vname)
+        for df_name in df_dct_tmp.keys():
+            if "confirmed" in df_name:
+                df_dct_tmp[df_name] = df_dct_tmp[df_name][df_dct_tmp[df_name][country_region_vname] == country]
+                df_dct_tmp[df_name] = df_dct_tmp[df_name].iloc[0].drop(index=[country_region_vname])
+                vars_to_use = np.trim_zeros(df_dct_tmp[df_name], trim="f").index
+                df_dct_tmp[df_name] = df_dct_tmp[df_name][vars_to_use]
+                confirmed_df_name = df_name
+                break
+        for df_name in [df_name_tmp for df_name_tmp in df_dct_tmp.keys() if df_name_tmp != confirmed_df_name]:
+            df_dct_tmp[df_name] = df_dct_tmp[df_name][df_dct_tmp[df_name][country_region_vname] == country]
+            df_dct_tmp[df_name] = df_dct_tmp[df_name].iloc[0].drop(index=[country_region_vname])
+            df_dct_tmp[df_name] = df_dct_tmp[df_name][vars_to_use]
+        return df_dct_tmp
 
     def extend_index(self, index, new_size):
         values = index.values
@@ -44,29 +60,44 @@ class Learner(object):
         return values
 
     def train(self):
-        recovered = self.load_df(dd.global_recovered_cases_fname, self.country)
-        death = self.load_df(dd.global_deaths_cases_fname, self.country)
-        confirmed = (self.load_df(dd.global_confirmed_cases_fname, self.country) - recovered - death)
-
-        optimal = minimize(loss, [0.001, 0.001], args=(confirmed, recovered, self.s_0, self.i_0, self.r_0),
+        s_0_default = 10000
+        df_dct_tmp = self.load_df(self.country)
+        recovered = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "recovered" in df_name][0]]
+        deaths = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "deaths" in df_name][0]]
+        confirmed = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "confirmed" in df_name][0]]
+        confirmed = confirmed - recovered - deaths
+        i_0 = confirmed.iloc[0]
+        population_df = self.s_0_src[self.s_0_src[country_region_vname] == self.country]
+        population_df = population_df.sort_values(s_0_vname, ascending=False).reset_index(drop=True)
+        if len(population_df) > 0:
+            s_0 = int(population_df.loc[0, s_0_vname])
+            print("INFO: population value for", self.country, "found:", s_0)
+        else:
+            s_0 = s_0_default
+            print("INFO: population df missing for", self.country, "using the default value:", s_0)
+        # print(len(confirmed) == len(deaths) == len(recovered))
+        optimal = minimize(loss, [0.001, 0.001], args=(confirmed, recovered, s_0, i_0, self.r_0),
                            method='L-BFGS-B', bounds=[(0.00000001, 0.4), (0.00000001, 0.4)])
         # print(optimal)
         beta, gamma = optimal.x
-        new_index, extended_actual, extended_recovered, extended_death, prediction = self.predict(
-            beta, gamma, confirmed, recovered, death, self.country, self.s_0, self.i_0, self.r_0)
-        df = pd.DataFrame(
-            {'Infected data': extended_actual, 'Recovered data': extended_recovered, 'Death data': extended_death,
-             'Susceptible': prediction.y[0], 'Infected': prediction.y[1], 'Recovered': prediction.y[2]},
-            index=new_index)
-        fig, ax = plt.subplots(figsize=(15, 10))
-        ax.set_title(self.country)
-        df.plot(ax=ax)
-        print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0:{(beta / gamma):.8f}")
-        export_str = re.sub(r'[^A-Za-z0-9 ]+', '', self.country)
-        fig.savefig(fig_export_path+f"{export_str}.png")
-        plt.close(fig)
+        # new_index, extended_actual, extended_recovered, extended_death, prediction = self.predict(
+        #     beta, gamma, confirmed, recovered, deaths, self.country, s_0, i_0, self.r_0)
+        # df = pd.DataFrame(
+        #     {'Infected data': extended_actual, 'Recovered data': extended_recovered, 'Death data': extended_death,
+        #      'Susceptible': prediction.y[0], 'Infected': prediction.y[1], 'Recovered': prediction.y[2]},
+        #     index=new_index)
+        # plotting
+        # fig, ax = plt.subplots(figsize=(15, 10))
+        # ax.set_title(self.country)
+        # df.plot(ax=ax)
+        r_0 = (beta / gamma)
+        print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0:{r_0:.8f}")
+        # export_str = re.sub(r'[^A-Za-z0-9 ]+', '', self.country)
+        # fig.savefig(fig_export_path+f"{export_str}.png")
+        # plt.close(fig)
+        return pd.Series([self.country, beta, gamma, r_0], index=result_df_vnames)
 
-    def predict(self, beta, gamma, confirmed, recovered, death, country, s_0, i_0, r_0):
+    def predict(self, beta, gamma, confirmed, recovered, deaths, country, s_0, i_0, r_0):
         new_index = self.extend_index(confirmed.index, self.predict_range)
         size = len(new_index)
 
@@ -78,7 +109,7 @@ class Learner(object):
 
         extended_actual = np.concatenate((confirmed.values, [None] * (size - len(confirmed.values))))
         extended_recovered = np.concatenate((recovered.values, [None] * (size - len(recovered.values))))
-        extended_death = np.concatenate((death.values, [None] * (size - len(death.values))))
+        extended_death = np.concatenate((deaths.values, [None] * (size - len(deaths.values))))
         return new_index, extended_actual, extended_recovered, extended_death, solve_ivp(
             SIR, [0, size], [s_0, i_0, r_0], t_eval=np.arange(0, size, 1))
 
@@ -100,10 +131,14 @@ def loss(point, data, recovered, s_0, i_0, r_0):
     return alpha * l1 + (1 - alpha) * l2
 
 
-def estimate_sir_params(countries, startdate="1/22/20", predict_range=150, s_0=100000, i_0=2, r_0=10):
+def estimate_sir_params(countries, df_dct, s_0_src, predict_range=150, r_0=2.5):
+
+    results_df = pd.DataFrame(columns=result_df_vnames)
+
     for country in countries:
-        learner = Learner(country, loss, startdate, predict_range, s_0, i_0, r_0)
-        learner.train()
+        learner = Learner(country, loss, df_dct, s_0_src, predict_range, r_0)
+        results_df = results_df.append(learner.train(), ignore_index=True, sort=False)
+    return results_df
 
 # def main():
 #

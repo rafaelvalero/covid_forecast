@@ -5,8 +5,27 @@ import pandas as pd
 loc_type_vname = "types"
 
 
-def normalise_str(series):
-    return series.str.upper().str.replace(r"_|\s{1,}", " ").str.strip()
+def normalise_str(series, upper=True, str_replace_rgx=r"_|\s{1,}", str_val_rgx=" "):
+    """
+    Normalises strings using optional parameters.
+    E.g. case using parameter upper, and regex replacements.
+
+    Args:
+        series (pd.Series): obvious
+        upper (bool): True for uppercase
+        str_replace_rgx (str): to look for replacement in regex
+        str_val_rgx (str): replacement value, leave both fields "" for no change
+
+    Returns:
+
+    """
+    if upper:
+        series_out = series.str.upper().str.replace(str_replace_rgx, str_val_rgx).str.strip()
+    elif not upper:
+        series_out = series.str.lower().str.replace(str_replace_rgx, str_val_rgx).str.strip()
+    else:
+        series_out = series.str.replace(str_replace_rgx, str_val_rgx).str.strip()
+    return series_out
 
 
 def reduce_mem(df):

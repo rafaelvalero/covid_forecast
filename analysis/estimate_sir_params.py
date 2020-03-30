@@ -60,21 +60,22 @@ class Learner(object):
         return values
 
     def train(self):
-        s_0_default = 10000
+        s_0_default = 1000
         df_dct_tmp = self.load_df(self.country)
         recovered = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "recovered" in df_name][0]]
         deaths = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "deaths" in df_name][0]]
         confirmed = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "confirmed" in df_name][0]]
         confirmed = confirmed - recovered - deaths
         i_0 = confirmed.iloc[0]
-        population_df = self.s_0_src[self.s_0_src[country_region_vname] == self.country]
-        population_df = population_df.sort_values(s_0_vname, ascending=False).reset_index(drop=True)
-        if len(population_df) > 0:
-            s_0 = int(population_df.loc[0, s_0_vname])
-            print("INFO: population value for", self.country, "found:", s_0)
-        else:
-            s_0 = s_0_default
-            print("INFO: population df missing for", self.country, "using the default value:", s_0)
+        # population_df = self.s_0_src[self.s_0_src[country_region_vname] == self.country]
+        # population_df = population_df.sort_values(s_0_vname, ascending=False).reset_index(drop=True)
+        # if len(population_df) > 0:
+        #     s_0 = int(population_df.loc[0, s_0_vname])
+        #     print("INFO: population value for", self.country, "found:", s_0)
+        # else:
+        #     s_0 = s_0_default
+        #     print("INFO: population df missing for", self.country, "using the default value:", s_0)
+        s_0 = s_0_default
         # print(len(confirmed) == len(deaths) == len(recovered))
         optimal = minimize(loss, [0.001, 0.001], args=(confirmed, recovered, s_0, i_0, self.r_0),
                            method='L-BFGS-B', bounds=[(0.00000001, 0.4), (0.00000001, 0.4)])
@@ -91,7 +92,7 @@ class Learner(object):
         # ax.set_title(self.country)
         # df.plot(ax=ax)
         r_0 = (beta / gamma)
-        print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0:{r_0:.8f}")
+        print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0:{r_0:.8f}", end="\n")
         # export_str = re.sub(r'[^A-Za-z0-9 ]+', '', self.country)
         # fig.savefig(fig_export_path+f"{export_str}.png")
         # plt.close(fig)

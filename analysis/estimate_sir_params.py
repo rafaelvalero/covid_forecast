@@ -92,7 +92,7 @@ class Learner(object):
         # ax.set_title(self.country)
         # df.plot(ax=ax)
         r_0 = (beta / gamma)
-        print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0:{r_0:.8f}", end="\n")
+        print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0={r_0:.8f}", end="\n")
         # export_str = re.sub(r'[^A-Za-z0-9 ]+', '', self.country)
         # fig.savefig(fig_export_path+f"{export_str}.png")
         # plt.close(fig)

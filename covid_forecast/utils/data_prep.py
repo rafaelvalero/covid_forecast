@@ -1,8 +1,12 @@
 import numpy as np
 import pandas as pd
-from IPython.display import display
+# from IPython.display import display
 
 loc_type_vname = "types"
+
+
+def normalise_str(series):
+    return series.str.upper().str.replace(r"_|\s{1,}", " ").str.strip()
 
 
 def reduce_mem(df):

@@ -41,7 +41,7 @@ class Learner(object):
             if "confirmed" in df_name:
                 df_dct_tmp[df_name] = df_dct_tmp[df_name][df_dct_tmp[df_name][country_region_vname] == country]
                 df_dct_tmp[df_name] = df_dct_tmp[df_name].iloc[0].drop(index=[country_region_vname])
-                vars_to_use = np.trim_zeros(df_dct_tmp[df_name], trim="f").index
+                vars_to_use = np.trim_zeros(df_dct_tmp[df_name], trim="fb").index  # trims head and tail of series 0s
                 df_dct_tmp[df_name] = df_dct_tmp[df_name][vars_to_use]
                 confirmed_df_name = df_name
                 break

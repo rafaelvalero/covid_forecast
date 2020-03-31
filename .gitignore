@@ -115,7 +115,7 @@ ENV/
 env.bak/
 venv.bak/
 .idea/
-data/
+data/raw/
 papers/
 reports/
 outputs/

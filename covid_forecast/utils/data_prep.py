@@ -3,9 +3,12 @@ import pandas as pd
 # from IPython.display import display
 
 loc_type_vname = "types"
+country_region_vname = "Country/Region"
+province_state_vname = "Province/State"
+s_0_vname = "s_0"
 
 
-def normalise_str(series, upper=True, str_replace_rgx=r"_|\s{1,}", str_val_rgx=" "):
+def normalise_str(series, upper=True, str_replace_rgx=r"_|-|\s{1,}|\*", str_val_rgx=" "):
     """
     Normalises strings using optional parameters.
     E.g. case using parameter upper, and regex replacements.
@@ -102,6 +105,47 @@ def find_admin_loc(target_loc, admin_txt_1='administrative_area_level_1',
             admin_lvl_2 = i
             return admin_lvl_2
     return admin_lvl_1
+
+
+def fillna_or_add_val(self, search_srt, fill_val, search_col=country_region_vname, fill_col=s_0_vname):
+    """
+    Fills value with given based on string.
+    If no results are found, a new line is inserted.
+
+    Args:
+        self (pd.DataFrame): input dataframe
+        search_srt (str): search string in search columns
+        fill_val: any fill value
+        search_col (str): column name to search, default country_region_vname
+        fill_col (str): col name to fill in value, default s_0_vname
+
+    Returns:
+
+    """
+    df_copy = self.copy()
+    if len(df_copy.loc[(df_copy[search_col] == search_srt), fill_col]) > 0:
+        df_copy.loc[(df_copy[search_col] == search_srt), fill_col] = fill_val
+    else:
+        df_copy = df_copy.append({search_col: search_srt, fill_col: fill_val}, ignore_index=True)
+    return df_copy
+
+
+def safe_merge_cols(df_left, df_right, col_add=s_0_vname, on=country_region_vname):
+    df_left = df_left.copy()
+    if col_add not in df_left.columns:
+        temp_df = df_left.merge(df_right, how="left", on=on)
+        df_in_shp, df_out_shp = df_left.shape, temp_df.shape
+        if (df_in_shp[0] == df_out_shp[0]) & (df_in_shp[1] == df_out_shp[1]-1):
+            cols= temp_df.columns.tolist()
+            cols = cols[-1:] + cols[:-1]
+            print("INFO: successfully merged")
+            return temp_df[cols]
+        else:
+            print("ERROR: resulting shape not as expected")
+            return df_left
+    else:
+        print("INFO: already joined", col_add)
+        return df_left
 
 
 # The SIR model differential equations.

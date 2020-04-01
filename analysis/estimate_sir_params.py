@@ -144,12 +144,3 @@ def estimate_sir_params(countries, df_dct, predict_range=365, r_0=3.87, plot=Fal
         learner = Learner(country, loss, df_dct, predict_range, r_0)
         results_df = results_df.append(learner.train(plot=plot), ignore_index=True, sort=False)
     return results_df
-
-# def main():
-#
-#     countries, startdate, predict_range , s_0, i_0, r_0
-#
-#     for country in countries:
-#         learner = Learner(country, loss, startdate, predict_range, s_0, i_0, r_0)
-#         #try:
-#         learner.train()

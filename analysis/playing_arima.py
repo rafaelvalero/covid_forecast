@@ -24,7 +24,7 @@ import pandas as pd
 
 sys.path.insert(0,'../../../covid_forcast')
 # where to save things
-OUTPUT = '../outputs/arima/countries'
+OUTPUT = '../outputs/arima/countries_2april2020'
 os.makedirs(OUTPUT,exist_ok=True)
 # In case you need to refresh the data, you need a folder /data
 download_csv_from_link()
@@ -114,7 +114,7 @@ Explanation/visualization some outputs as well in notebook"""
 report_country = pd.DataFrame()
 if run_predict_next_3_days:
     data = get_data()
-    data['dateRep'] = pd.to_datetime(data['dateRep'],infer_datetime_format=True)
+    data['dateRep'] = pd.to_datetime(data['dateRep'], format="%d/%m/%Y")
     report_country = pd.DataFrame()
     report = pd.DataFrame()
     for country in tqdm(country_list):

@@ -1,6 +1,6 @@
 """Credit to: Lewuathe (Github). Source code: https://github.com/Lewuathe/COVID19-SIR"""
 import os
-import re
+# import re
 import sys
 from datetime import timedelta, datetime
 
@@ -23,15 +23,16 @@ result_df_vnames = ["country", "beta", "gamma", "r_0"]
 country_region_vname = 'Country/Region'
 s_0_vname = "s_0"
 population_df_vnames = [country_region_vname, s_0_vname]
-# beta, gamma = 0.0001, 0.001
+beta, gamma = 0.001, 0.001
 
 
 class Learner(object):
-    def __init__(self, country, loss_funct, df_dct, predict_range, r_0):
+    def __init__(self, country, loss_funct, df_dct, predict_range, i_0, r_0):
         self.country = country
         self.loss = loss_funct
         self.df_dct = df_dct
         self.predict_range = predict_range
+        self.i_0 = i_0
         self.r_0 = r_0
 
     def load_df(self, country):
@@ -62,19 +63,19 @@ class Learner(object):
         return values
 
     def train(self, plot=False):
-        # global beta
-        # global gamma
+        global beta
+        global gamma
         df_dct_tmp, s_0 = self.load_df(self.country)
 
         recovered = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "recovered" in df_name][0]]
         deaths = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "deaths" in df_name][0]]
         confirmed = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "confirmed" in df_name][0]]
         confirmed = confirmed - recovered - deaths
-        i_0 = confirmed.iloc[0]
+        # i_0 = confirmed.iloc[0]
 
-        # print(self.country, s_0, i_0, self.r_0, confirmed.index)
+        print(self.country, "population:", s_0, "start date", confirmed.index[0])  #, "infected:", i_0)
         # print(len(confirmed) == len(deaths) == len(recovered))
-        optimal = minimize(loss, [0.0001, 0.001], args=(confirmed, recovered, s_0, i_0, self.r_0),
+        optimal = minimize(loss, [0.001, 0.001], args=(confirmed, recovered, s_0, self.i_0, self.r_0),
                            method='L-BFGS-B', bounds=[(0.00000001, 0.4), (0.00000001, 0.4)])
         # print(optimal)
         beta, gamma = optimal.x
@@ -82,11 +83,11 @@ class Learner(object):
         if plot:
             # Plotting prep
             new_index, extended_actual, extended_recovered, extended_death, prediction = self.predict(
-                beta, gamma, confirmed, recovered, deaths, self.country, s_0, i_0, self.r_0)
+                beta, gamma, confirmed, recovered, deaths, self.country, s_0, self.i_0, self.r_0)
             df = pd.DataFrame(
-                {'Infected data': extended_actual, 'Recovered data': extended_recovered, 'Death data': extended_death,
-                 'Susceptible': prediction.y[0], 'Infected': prediction.y[1], 'Recovered': prediction.y[2]},
-                index=new_index)
+                {'Infected (actual)': extended_actual, 'Recovered (actual)': extended_recovered,
+                 'Death (actual)': extended_death, 'Susceptible': prediction.y[0], 'Infected': prediction.y[1],
+                 'Recovered': prediction.y[2]}, index=new_index)
 
             # Actual plotting
             fig, ax = plt.subplots(figsize=(15, 10))
@@ -94,12 +95,12 @@ class Learner(object):
             df.plot(ax=ax)
 
             # Exporting plot
-            export_str = re.sub(r'[^A-Za-z0-9 ]+', '', self.country)
-            fig.savefig(fig_export_path+f"{export_str}.png")
+            # export_str = re.sub(r'[^A-Za-z0-9 ]+', '', self.country)
+            fig.savefig(fig_export_path+f"{self.country}.png")
             plt.close(fig)
 
         r_0 = (beta / gamma)
-        print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0={r_0:.8f}", end="\n")
+        print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0={r_0:.8f}", "\n")
         return pd.Series([self.country, beta, gamma, r_0], index=result_df_vnames)
 
     def predict(self, beta, gamma, confirmed, recovered, deaths, country, s_0, i_0, r_0):
@@ -119,8 +120,8 @@ class Learner(object):
             SIR, [0, size], [s_0, i_0, r_0], t_eval=np.arange(0, size, 1))
 
 
-def loss(point, data, recovered, s_0, i_0, r_0):
-    size = len(data)
+def loss(point, confirmed, recovered, s_0, i_0, r_0):
+    size = len(confirmed)
     beta, gamma = point
 
     def SIR(t, y):
@@ -130,17 +131,17 @@ def loss(point, data, recovered, s_0, i_0, r_0):
         return [-beta*S*I, beta*S*I-gamma*I, gamma*I]
 
     solution = solve_ivp(SIR, [0, size], [s_0, i_0, r_0], t_eval=np.arange(0, size, 1), vectorized=True)
-    l1 = np.sqrt(np.mean((solution.y[1] - data)**2))
+    l1 = np.sqrt(np.mean((solution.y[1] - confirmed)**2))
     l2 = np.sqrt(np.mean((solution.y[2] - recovered)**2))
     alpha = 0.1
     return alpha * l1 + (1 - alpha) * l2
 
 
-def estimate_sir_params(countries, df_dct, predict_range=365, r_0=3.87, plot=False):
+def estimate_sir_params(countries, df_dct, predict_range=365, i_0=2, r_0=0, plot=False):
 
     results_df = pd.DataFrame(columns=result_df_vnames)
 
     for country in countries:
-        learner = Learner(country, loss, df_dct, predict_range, r_0)
+        learner = Learner(country, loss, df_dct, predict_range, i_0, r_0)
         results_df = results_df.append(learner.train(plot=plot), ignore_index=True, sort=False)
     return results_df

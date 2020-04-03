@@ -31,7 +31,7 @@ def safe_mkdir(abs_dir_path):
         str: of target directory
     """
     if not os.path.isdir(abs_dir_path):
-        os.mkdir(abs_dir_path)
+        os.makedirs(abs_dir_path, exist_ok=True)
     abs_dir_path += os.sep
     return abs_dir_path
 
@@ -43,3 +43,8 @@ export_foldname = safe_mkdir(export_foldname)
 # Getting data from John Hopkins repo
 for file in all_files:
     download_csv_from_link(url=jh_git_url+file, dowload_folder_name=download_foldname+file)
+
+#abs_dir_path=download_foldname
+
+#if not os.path.isdir(abs_dir_path):
+#    os.mkdir(abs_dir_path)

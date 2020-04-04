@@ -2,11 +2,10 @@
 https://www.maa.org/press/periodicals/loci/joma/the-sir-model-for-spread-of-disease-the-differential-equation-model
 https://scipython.com/book/chapter-8-scipy/additional-examples/the-sir-epidemic-model/
 
-:TODO transform dates
+
+ORIGINAL CODE from:
+  Lewuathe (Github).  https://github.com/Lewuathe/COVID19-SIR
 """
-
-
-
 
 # !/usr/bin/python
 import numpy as np
@@ -25,7 +24,7 @@ import os
 
 """Here some parameters to play around"""
 countries = ['United Kingdom','Spain','US','Italy','Cyprus', 'France', 'India']
-download = False
+download = True
 plot_grpahs = True
 countries_populations = {'United Kingdom':66488991,
                          'Spain':46723749 ,
@@ -35,7 +34,8 @@ countries_populations = {'United Kingdom':66488991,
                          'China': 1386000000,
                          'India': 1339000000}
 OUTPUT = 'output'
-os.makedirs(OUTPUT,exist_ok=True)
+DATA_FOLDER = '../data/jh_data'
+[os.makedirs(i,exist_ok=True) for i in [DATA_FOLDER]]
 """------------------------------------------------"""
 
 def remove_province(input_file, output_file):
@@ -49,10 +49,13 @@ def remove_province(input_file, output_file):
     output.close()
 
 
-def download_data(url_dictionary):
+def download_data(url_dictionary, DATA_FOLDER = "./data/" ):
     # Lets download the files
     for url_title in url_dictionary.keys():
-        urllib.request.urlretrieve(url_dictionary[url_title], "./data/" + url_title)
+        if DATA_FOLDER.endswith('/'):
+            urllib.request.urlretrieve(url_dictionary[url_title], DATA_FOLDER + url_title)
+        else:
+            urllib.request.urlretrieve(url_dictionary[url_title], DATA_FOLDER + '/'+ url_title)
 
 
 def load_json(json_file_str):
@@ -66,7 +69,7 @@ def load_json(json_file_str):
 
 
 class Learner(object):
-    def __init__(self, country, loss,s_0 = 1, i_0=1, r_0=1, predict_range=300):
+    def __init__(self, country, loss,s_0 = 1, i_0=1, r_0=1, predict_range=300,DATA_FOLDER="./data"):
         self.country = country
         self.loss = loss
         #self.start_date = start_Data
@@ -76,13 +79,14 @@ class Learner(object):
         self.s_0 = s_0
         self.i_0 = i_0
         self.r_0 = r_0
-    def  get_starting_date(self):
+        self.DATA_FOLDER = DATA_FOLDER
+    def  get_starting_date(self, DATA_FOLDER = DATA_FOLDER):
         """
         This function help you with the starting date
         :param country:
         :return:
         """
-        df = pd.read_csv('data/time_series_19-covid-Confirmed-country.csv')
+        df = pd.read_csv(DATA_FOLDER+'/time_series_19-covid-Confirmed-country.csv')
         country_df = df[df['Country/Region'] == self.country]
         # Remove values no related to date
         country_df = country_df.iloc[:, 4:]
@@ -91,18 +95,18 @@ class Learner(object):
         # Select start date as well
         return country_df.iloc[:, length_array - remove_initial_zeros].name
 
-    def load_confirmed(self, country):
-        df = pd.read_csv('data/time_series_19-covid-Confirmed-country.csv')
+    def load_confirmed(self, country, DATA_FOLDER = DATA_FOLDER):
+        df = pd.read_csv(DATA_FOLDER+'/time_series_19-covid-Confirmed-country.csv')
         country_df = df[df['Country/Region'] == country]
         return country_df.iloc[0].loc[self.start_date:]
 
-    def load_recovered(self, country):
-        df = pd.read_csv('data/time_series_19-covid-Recovered-country.csv')
+    def load_recovered(self, country, DATA_FOLDER = DATA_FOLDER):
+        df = pd.read_csv(DATA_FOLDER+'/time_series_19-covid-Recovered-country.csv')
         country_df = df[df['Country/Region'] == country]
         return country_df.iloc[0].loc[self.start_date:]
 
-    def load_dead(self, country):
-        df = pd.read_csv('data/time_series_19-covid-Deaths-country.csv')
+    def load_dead(self, country, DATA_FOLDER = DATA_FOLDER):
+        df = pd.read_csv(DATA_FOLDER+'/time_series_19-covid-Deaths-country.csv')
         country_df = df[df['Country/Region'] == country]
         return country_df.iloc[0].loc[self.start_date:]
 
@@ -195,41 +199,18 @@ def loss(point, data, recovered, s_0, i_0, r_0):
     return alpha * l1 + (1 - alpha) * l2
 
 
-def main():
-    countries, download, startdate, predict_range, s_0, i_0, r_0 = parse_arguments()
-
-    if download:
-        data_d = load_json("./data_url.json")
-        download_data(data_d)
-
-    remove_province('data/time_series_19-covid-Confirmed.csv', 'data/time_series_19-covid-Confirmed-country.csv')
-    remove_province('data/time_series_19-covid-Recovered.csv', 'data/time_series_19-covid-Recovered-country.csv')
-    remove_province('data/time_series_19-covid-Deaths.csv', 'data/time_series_19-covid-Deaths-country.csv')
-
-    for country in countries:
-        learner = Learner(country, loss, startdate, predict_range, s_0, i_0, r_0)
-        # try:
-        learner.train()
-        # except BaseException:
-        #    print('WARNING: Problem processing ' + str(country) +
-        #        '. Be sure it exists in the data exactly as you entry it.' +
-        #        ' Also check date format if you passed it as parameter.')
-
-
-
-
 
 if download:
-    data_d = load_json("./data_url.json")
-    download_data(data_d)
+    data_d=load_json("../data/data_url.json")
+    download_data(data_d, DATA_FOLDER=DATA_FOLDER)
 
-remove_province('data/time_series_19-covid-Confirmed.csv', 'data/time_series_19-covid-Confirmed-country.csv')
-remove_province('data/time_series_19-covid-Recovered.csv', 'data/time_series_19-covid-Recovered-country.csv')
-remove_province('data/time_series_19-covid-Deaths.csv', 'data/time_series_19-covid-Deaths-country.csv')
+remove_province(DATA_FOLDER+'/time_series_19-covid-Confirmed.csv', DATA_FOLDER+'/time_series_19-covid-Confirmed-country.csv')
+remove_province(DATA_FOLDER+'/time_series_19-covid-Recovered.csv', DATA_FOLDER+'/time_series_19-covid-Recovered-country.csv')
+remove_province(DATA_FOLDER+'/time_series_19-covid-Deaths.csv', DATA_FOLDER+'/time_series_19-covid-Deaths-country.csv')
 
 for country in countries:
-    learner = Learner(country, loss, s_0=countries_populations[country], i_0=10, r_0=5)
+    learner = Learner(country, loss, s_0=countries_populations[country], i_0=10, r_0=5, DATA_FOLDER=DATA_FOLDER)
     # try:
     df = learner.train()
 
-df = pd.read_csv('data/time_series_19-covid-Deaths-country.csv')
+df = pd.read_csv(DATA_FOLDER+'/time_series_19-covid-Deaths-country.csv')

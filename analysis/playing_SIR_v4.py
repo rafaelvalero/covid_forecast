@@ -1,6 +1,14 @@
 """
 
-In this version models with and without nomalization
+Sandbox
+
+Idea:
+    1) create report for all countries in list with the graph normalized and no-normalized.
+    2) Create picts
+    3) Optimatize with R instead of gamma and beta at the same time.
+
+
+Everyting Self contain in this script
 
 
 References:

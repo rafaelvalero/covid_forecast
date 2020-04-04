@@ -63,8 +63,8 @@ class Learner(object):
         return values
 
     def train(self, plot=False):
-        global beta
-        global gamma
+        # global beta
+        # global gamma
         df_dct_tmp, s_0 = self.load_df(self.country)
 
         recovered = df_dct_tmp[[df_name for df_name in df_dct_tmp.keys() if "recovered" in df_name][0]]

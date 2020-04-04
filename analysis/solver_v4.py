@@ -1,9 +1,4 @@
 """
-
-In this version models with and without nomalization
-
-
-References:
 https://www.maa.org/press/periodicals/loci/joma/the-sir-model-for-spread-of-disease-the-differential-equation-model
 https://scipython.com/book/chapter-8-scipy/additional-examples/the-sir-epidemic-model/
 
@@ -29,9 +24,8 @@ import os
 
 """Here some parameters to play around"""
 countries = ['United Kingdom','Spain','US','Italy','Cyprus', 'France', 'India']
-#countries = ['US']
-download = False
-plot_grpahs = False
+download = True
+plot_grpahs = True
 countries_populations = {'United Kingdom':66488991,
                          'Spain':46723749 ,
                          'US': 327167434,'Italy':60431283 ,
@@ -39,9 +33,9 @@ countries_populations = {'United Kingdom':66488991,
                          'France':66900000,
                          'China': 1386000000,
                          'India': 1339000000}
-OUTPUT = '../outputs/sir_models'
+OUTPUT = 'output'
 DATA_FOLDER = '../data/jh_data'
-[os.makedirs(i,exist_ok=True) for i in [DATA_FOLDER,OUTPUT]]
+[os.makedirs(i,exist_ok=True) for i in [DATA_FOLDER]]
 """------------------------------------------------"""
 
 def remove_province(input_file, output_file):
@@ -124,7 +118,7 @@ class Learner(object):
             values = np.append(values, datetime.strftime(current, '%m/%d/%y'))
         return values
 
-    def predict(self, beta, gamma, data, recovered, death, country, s_0, i_0, r_0, normalized=True):
+    def predict(self, beta, gamma, data, recovered, death, country, s_0, i_0, r_0):
         new_index = self.extend_index(data.index, self.predict_range)
         size = len(new_index)
 
@@ -132,10 +126,8 @@ class Learner(object):
             S = y[0]
             I = y[1]
             R = y[2]
-            if normalized:
-                return [-beta * S * I, beta * S * I - gamma * I, gamma * I]
-            else:
-                return [-beta * S * I / s_0, beta * S * I / s_0 - gamma * I, gamma * I]
+            #return [-beta * S * I / s_0, beta * S * I /s_0 - gamma * I, gamma * I]
+            return [-beta * S * I, beta * S * I - gamma * I, gamma * I]
 
         extended_actual = np.concatenate((data.values, [None] * (size - len(data.values))))
         extended_recovered = np.concatenate((recovered.values, [None] * (size - len(recovered.values))))
@@ -146,19 +138,13 @@ class Learner(object):
                              t_eval=np.arange(0, size, 1),method='LSODA')
                              #t_eval=np.arange(0, size, 1), method='LSODA')
 
-    def train(self, normalized=True, solver_method='L-BFGS-B'):
+    def train(self):
         self.recovered = self.load_recovered(self.country)
         self.death = self.load_dead(self.country)
         self.data = (self.load_confirmed(self.country) - self.recovered - self.death)
 
-        if normalized:
-            optimal = minimize(loss, [0.2/self.s_0, 0.1/self.s_0], args=(self.data, self.recovered, self.s_0, self.i_0, self.r_0, int(normalized)),
-                                method=solver_method, bounds=[(0.00000001, 2), (0.00000001, 0.1)])
-            optimal.update({'method': solver_method})
-        else:
-            optimal = minimize(loss, [0.2, 0.1], args=(self.data, self.recovered, self.s_0, self.i_0, self.r_0, int(normalized)),
-                               method=solver_method, bounds=[(0.00000001, 2), (0.00000001, 0.1)])
-            optimal.update({'method': solver_method})
+        optimal = minimize(loss, [0.2/self.s_0, 0.1/self.s_0], args=(self.data, self.recovered, self.s_0, self.i_0, self.r_0),
+                           method='L-BFGS-B', bounds=[(0.00000001, 2), (0.00000001, 0.1)])
         print(optimal)
         beta, gamma = optimal.x
         new_index, extended_actual, extended_recovered, extended_death,\
@@ -166,8 +152,7 @@ class Learner(object):
                                                           self.recovered, self.death,
                                                           self.country,
                                                           self.s_0, self.i_0,
-                                                          self.r_0,
-                                                          normalized=normalized)
+                                                          self.r_0)
         df = pd.DataFrame(
             {'Infected data': extended_actual, 'Recovered data': extended_recovered,
              'Death data': extended_death,
@@ -182,7 +167,7 @@ class Learner(object):
         fig, ax = plt.subplots(figsize=(10, 7))
         ax.set_title(self.country)
         df.plot(ax=ax)
-        fig.savefig(OUTPUT+"/{}_v{}.png".format(self.country,normalized))
+        fig.savefig(f"output/{self.country}.png")
         if plot_grpahs:
             plt.gcf()
             plt.show()
@@ -190,21 +175,10 @@ class Learner(object):
             plt.close('all')
         print(f"country={self.country}, beta={beta:.8f}, gamma={gamma:.8f}, r_0:{(beta / gamma):.8f}")
 
-        return optimal
+        return df
 
 
-def loss(point, data, recovered, s_0, i_0, r_0, normalized):
-    """
-
-    :param point:
-    :param data:
-    :param recovered:
-    :param s_0:
-    :param i_0:
-    :param r_0:
-    :param normalize: boolean this is to normalize or not the problem
-    :return:
-    """
+def loss(point, data, recovered, s_0, i_0, r_0):
     size = len(data)
     beta, gamma = point
 
@@ -212,10 +186,8 @@ def loss(point, data, recovered, s_0, i_0, r_0, normalized):
         S = y[0]
         I = y[1]
         R = y[2]
-        if bool(normalized):
-            return [-beta * S * I, beta * S * I - gamma * I, gamma * I]
-        else:
-            return [-beta * S * I / s_0, beta * S * I / s_0 - gamma * I, gamma * I]
+        #return [-beta * S * I / s_0, beta * S * I /s_0 - gamma * I, gamma * I]
+        return [-beta * S * I , beta * S * I  - gamma * I, gamma * I]
 
     solution = solve_ivp(SIR, [0, size], [s_0, i_0, r_0], t_eval=np.arange(0, size, 1),
                          vectorized=True,method='LSODA')
@@ -236,29 +208,9 @@ remove_province(DATA_FOLDER+'/time_series_19-covid-Confirmed.csv', DATA_FOLDER+'
 remove_province(DATA_FOLDER+'/time_series_19-covid-Recovered.csv', DATA_FOLDER+'/time_series_19-covid-Recovered-country.csv')
 remove_province(DATA_FOLDER+'/time_series_19-covid-Deaths.csv', DATA_FOLDER+'/time_series_19-covid-Deaths-country.csv')
 
-results = []
 for country in countries:
-    info = {}
     learner = Learner(country, loss, s_0=countries_populations[country], i_0=10, r_0=5, DATA_FOLDER=DATA_FOLDER)
     # try:
-    for normalized in [True, False]:
-        optimal = learner.train(normalized=normalized)
-        # Collecting metadata
-        info = {}
-        info['country'] = country
-        info.update(optimal)
-        info['SIR normalized'] = normalized
-        beta, gamma = optimal.x
-        info['beta'] = beta
-        info['gamma'] = gamma
-        info['R'] = beta / gamma
-        results.append(info)
+    df = learner.train()
 
-
-
-    #learner.train(normalized=False)
-    # if optimal.success == False:
-    #     print(optimal.success)
-    #     learner.train(normalized=False)
-
-pd.DataFrame(results).to_csv(OUTPUT+'/models_metadata.csv')
+df = pd.read_csv(DATA_FOLDER+'/time_series_19-covid-Deaths-country.csv')

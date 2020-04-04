@@ -290,6 +290,32 @@ def selection_of_best_models_and_move_pics(report_results, maximum_treshold_for_
         new_location_fie = '/'.join(location_file[:-1]) + '/BEST_{}.png'.format(country)
         shutil.copy(best_graphs_location, new_location_fie)
 
+
+def selection_of_best_models_and_move_pics(report_results, maximum_treshold_for_RN = 100,
+                                           result_df_vnames = ["country", "beta", "gamma", "RN"]):
+    """
+    There are different cases less select the best one some how
+    :param report_results: dataframe: the report from all cases.
+    :param maximum_treshold_for_RN: I see there are some final graphs with very high RN, a threshold for that
+    :return:
+    """
+    list_results = []
+    for country in report_results['country']:
+        # Country cases
+        slice_report_by_country = report_results[report_results['country'] == country]
+        # Check in if the country has models with any RN reasonable
+        # :TODO perhaps easy rank it?
+        slice_report_by_country = slice_report_by_country[slice_report_by_country['RN'] \
+                                                          < maximum_treshold_for_RN]
+        # Select the cases with less error and give me the location
+        best_graphs_location = slice_report_by_country.sort_values('fun')[result_df_vnames].head(1).values[0]
+        info = {}
+        for index_ in range(result_df_vnames.__len__()):
+            print(index_)
+            info[result_df_vnames[index_]] = best_graphs_location[index_]
+        list_results.append(info)
+    return pd.DataFrame(list_results)
+
 if __name__ == '__main__':
     """This will allow to use this as a library later.
     The doctest is for start introducing variables if wanted"""
@@ -359,37 +385,6 @@ if __name__ == '__main__':
     selection_of_best_models_and_move_pics(report_results)
 
 
-result_df_vnames = ["country", "beta", "gamma", "RN"]
-maximum_treshold_for_RN = 100
 
 
 
-def selection_of_best_models_and_move_pics(report_results, maximum_treshold_for_RN = 100,
-                                           result_df_vnames = ["country", "beta", "gamma", "RN"]):
-    """
-    There are different cases less select the best one some how
-    :param report_results: dataframe: the report from all cases.
-    :param maximum_treshold_for_RN: I see there are some final graphs with very high RN, a threshold for that
-    :return:
-    """
-    list_results = []
-    for country in report_results['country']:
-        # Country cases
-        slice_report_by_country = report_results[report_results['country'] == country]
-        # Check in if the country has models with any RN reasonable
-        # :TODO perhaps easy rank it?
-        slice_report_by_country = slice_report_by_country[slice_report_by_country['RN'] \
-                                                          < maximum_treshold_for_RN]
-        # Select the cases with less error and give me the location
-        best_graphs_location = slice_report_by_country.sort_values('fun')[result_df_vnames].head(1).values[0]
-        info = {}
-        for index_ in range(result_df_vnames.__len__()):
-            print(index_)
-            info[result_df_vnames[index_]] = best_graphs_location[index_]
-        list_results.append(info)
-    return pd.DataFrame(list_results)
-
-
-
-
-        return

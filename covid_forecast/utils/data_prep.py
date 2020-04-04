@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 # from IPython.display import display
 
+#:TODO place in constansts
 loc_type_vname = "types"
 country_region_vname = "Country/Region"
 province_state_vname = "Province/State"

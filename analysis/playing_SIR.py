@@ -346,9 +346,9 @@ if __name__ == '__main__':
         data_d=load_json("../data/data_url.json")
         download_data(data_d, DATA_FOLDER=DATA_FOLDER)
 
-    remove_province(DATA_FOLDER+'/time_series_19-covid-Confirmed.csv', DATA_FOLDER+'/time_series_19-covid-Confirmed-country.csv')
-    remove_province(DATA_FOLDER+'/time_series_19-covid-Recovered.csv', DATA_FOLDER+'/time_series_19-covid-Recovered-country.csv')
-    remove_province(DATA_FOLDER+'/time_series_19-covid-Deaths.csv', DATA_FOLDER+'/time_series_19-covid-Deaths-country.csv')
+        remove_province(DATA_FOLDER+'/time_series_19-covid-Confirmed.csv', DATA_FOLDER+'/time_series_19-covid-Confirmed-country.csv')
+        remove_province(DATA_FOLDER+'/time_series_19-covid-Recovered.csv', DATA_FOLDER+'/time_series_19-covid-Recovered-country.csv')
+        remove_province(DATA_FOLDER+'/time_series_19-covid-Deaths.csv', DATA_FOLDER+'/time_series_19-covid-Deaths-country.csv')
 
     results = []
     for country in countries:

@@ -76,7 +76,7 @@ class Learner(object):
         print(self.country, "population:", s_0, "start date", confirmed.index[0])  #, "infected:", i_0)
         # print(len(confirmed) == len(deaths) == len(recovered))
         optimal = minimize(loss, [0.001, 0.001], args=(confirmed, recovered, s_0, self.i_0, self.r_0),
-                           method='L-BFGS-B', bounds=[(0.00000001, 0.4), (0.00000001, 0.4)])
+                           method='LSODA', bounds=[(0.00000001, 0.4), (0.00000001, 0.4)])
         # print(optimal)
         beta, gamma = optimal.x
 

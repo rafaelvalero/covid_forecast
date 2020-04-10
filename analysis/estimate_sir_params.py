@@ -1,6 +1,5 @@
 """Credit to: Lewuathe (Github). Source code: https://github.com/Lewuathe/COVID19-SIR"""
 import os
-# import re
 import sys
 from datetime import timedelta, datetime
 

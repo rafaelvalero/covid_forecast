@@ -24,7 +24,7 @@ import pandas as pd
 
 sys.path.insert(0,'../../../covid_forcast')
 # where to save things
-OUTPUT = '../outputs/arima/countries_2april2020'
+OUTPUT = '../outputs/arima/countries'
 os.makedirs(OUTPUT,exist_ok=True)
 # In case you need to refresh the data, you need a folder /data
 download_csv_from_link()
@@ -35,9 +35,9 @@ run_predict_next_3_days = True
 
 """List of countries to explore"""
 data = get_data()
-#country_list = ['China', 'Italy', 'Germany', 'India', 'Spain', 'United_Kingdom', 'United_States_of_America',
-#                     'Lithuania', 'Cyprus']
-country_list = data['countriesAndTerritories'].unique()
+country_list = ['China', 'Italy', 'Germany', 'India', 'Spain', 'United_Kingdom', 'United_States_of_America',
+                     'Lithuania', 'Cyprus']
+#country_list = data['countriesAndTerritories'].unique()
 
 def filter_by_country(self, country_vname='Countries and territories', date_vname='DateRep'):
     """

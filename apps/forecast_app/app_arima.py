@@ -33,12 +33,13 @@ dowload_folder_name='../../data/data2.csv'
 
 
 """List of countries to explore"""
-country_list = ['China', 'Italy', 'Germany', 'India', 'Spain', 'United_Kingdom', 'United_States_of_America',
-                     'Lithuania', 'Cyprus']
+
 
 variable_list = ['cases', 'deaths']
 data = get_data(dowload_folder_name=dowload_folder_name)
-
+#country_list = ['China', 'Italy', 'Germany', 'India', 'Spain', 'United_Kingdom', 'United_States_of_America',
+#                     'Lithuania', 'Cyprus']
+country_list = data.countriesAndTerritories.unique().tolist()
 data['dateRep'] = pd.to_datetime(data['dateRep'], format='%d/%m/%Y')
 """Some documentation"""
 homepage = Div(text=open(os.path.join(os.getcwd(), 'homepage.html')).read(), width=800)
